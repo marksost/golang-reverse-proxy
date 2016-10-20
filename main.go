@@ -12,6 +12,7 @@ import (
 	"net/url"
 	"os"
 	"os/signal"
+	"regexp"
 	"strings"
 	"time"
 
@@ -21,7 +22,7 @@ import (
 
 const (
 	// Default set of backend servers to use for proxying requests
-	DEFAULT_BACKENDS = "http://127.0.0.1:6060,http://127.0.0.1:6061,http://127.0.0.1:6062"
+	DEFAULT_BACKENDS = "127.0.0.1:6060,127.0.0.1:6061,127.0.0.1:6062"
 	// Default port to use for the server
 	DEFAULT_PORT = "8080"
 	// Default server timeout
@@ -85,7 +86,12 @@ func parseBackends() {
 		// Remove leading and trailing spaces
 		backend = strings.Trim(backend, " ")
 
-		// TO-DO: Handle scheme checking
+		// Check for http scheme
+		// TO-DO: Possibly handle other edge cases
+		match, _ := regexp.MatchString("^(?:https?:)?//", backend)
+		if match == false {
+			backend = "http://" + backend
+		}
 
 		// Parse backend address and check validity
 		backendUrl, err := url.Parse(backend)
