@@ -24,6 +24,8 @@ const (
 	DEFAULT_BACKENDS = "http://127.0.0.1:6060,http://127.0.0.1:6061,http://127.0.0.1:6062"
 	// Default port to use for the server
 	DEFAULT_PORT = "8080"
+	// Default server timeout
+	DEFAULT_SERVER_TIMEOUT = 30
 )
 
 type (
@@ -117,8 +119,8 @@ func startServer() {
 	// Set up server
 	server.Addr = ":" + *port
 	server.Handler = mux
-	server.ReadTimeout = time.Duration(30) * time.Second
-	server.WriteTimeout = time.Duration(30) * time.Second
+	server.ReadTimeout = time.Duration(DEFAULT_SERVER_TIMEOUT) * time.Second
+	server.WriteTimeout = time.Duration(DEFAULT_SERVER_TIMEOUT) * time.Second
 
 	// Set up server routes
 	mux.Handle("/", http.HandlerFunc(handle))
